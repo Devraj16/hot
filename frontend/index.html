@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chatbot</title>
+    <style>
+      body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1d1d1d;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 98vh;
+        }
+        #chatbot-container {
+            background-color: #6fc6d6;
+            padding: 20px;
+            border-radius: 20px;
+            width: 400px;
+            height: 70%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .chat-message {
+            background-color: #f7ecec;
+            color: #0000;
+            padding: 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            max-width: 80%;
+        }
+        .user-msg {
+            background-color: #8a4e99;
+            color: #fff;
+            align-self: flex-end;
+        }
+        .bot-msg {
+            background-color: #ff9a8b;
+            color: #fff;
+        }
+        h1 {
+            font-size: 32px;
+            color: hotpink;
+            font-family: 'Verdana', sans-serif; /* Change the font to Verdana */
+            margin-bottom: 40px; /* Increase the margin from 10px to 20px */
+            margin-top: 40px; /* Add a margin from the top  */
+            position: absolute;
+            top: 0;
+        }
+        #user-input {
+            width: 60%;
+            display: flex;
+            justify-content: bottom;
+            align-items: bottom;
+            padding: 10px;
+            background-color: #6fc6d6;
+            border-top-right-radius: 20px;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #user-message {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid #fff;
+            background-color: transparent;
+            color: #fff;
+            outline: none;
+            max-width: 80%; /* Reduce the length of the input section */
+        }
+        #user-message::placeholder {
+            color: #aaa;
+        }
+        #user-input input[type="submit"] {
+            background-color: #8a4e99;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+        #user-input input[type="submit"]:hover {
+            background-color: #8056a2;
+        }
+
+        /* Change the background color of the output section */
+        #chatbot-container.active {
+            background-color: #f7ecec;
+          
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Chatbot</h1>
+    <div id="chat-container"></div>
+    <form id="user-input">
+        <input type="text" name="user_message" id="user-message" placeholder="Type a message...">
+        <input type="submit" value="Send">
+    </form>
+    <script>
+        document.getElementById('user-input').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userMessage = document.getElementById('user-message').value;
+            document.getElementById('user-message').value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ user_message: userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const chatContainer = document.getElementById('chat-container');
+                chatContainer.innerHTML += '<div>User: ' + userMessage + '</div>';
+                chatContainer.innerHTML += '<div>Chatbot: ' + data.bot_message + '</div>';
+            });
+        });
+    </script>
+</body>
+</html>
